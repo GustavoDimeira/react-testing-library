@@ -5,27 +5,28 @@ import App from '../App';
 import renderWithRouter from '../helper/renderWithRouter';
 
 describe('testando componente pokemon', () => {
-  it('Botão mais detalhes', () => {
+  it('Botão mais detalhes, e função salvar favorito', () => {
     renderWithRouter(<App />);
-    const btn = screen.getByRole('link', { name: /more details/i });
-    userEvent.click(btn);
+    const moreDetails = screen.getByRole('link', { name: /more details/i });
+    userEvent.click(moreDetails);
+
     const title = screen.getByRole('heading', { name: /summary/i });
     expect(title).toBeInTheDocument();
+
+    const BTNsavFav = screen.getByRole('checkbox', { name: /pokémon favoritado\?/i });
+    userEvent.click(BTNsavFav);
+
+    const star = screen.getByRole('img', { name: /is marked as favorite/i });
+    expect(star.src).toBe('http://localhost/star-icon.svg');
   });
-  it('A imagem deve ter m alt e um src definido', () => {
+  it('card de pokemon deve ter as informações', () => {
     renderWithRouter(<App />);
-    const img = screen.getByRole('img');
-    expect(img.src).not.toBe("");
-    expect(img.alt).not.toBe("");
+    const type = screen.getByTestId('pokemon-type');
+    expect(type).not.toHaveTextContent('');
   });
-  it('marcar como favorito', () => {
+  it('img do pokemom deve ter alt, e src corretos', () => {
     renderWithRouter(<App />);
-    const btnDetails = screen.getByRole('link', { name: /more details/i });
-    userEvent.click(btnDetails);
-    const btnFavoriter = screen.getByText(/pokémon favoritado\?/i);
-    userEvent.click(btnFavoriter);
-    const imgStar = screen.getAllByRole('img');
-    expect(imgStar[1].src).not.toBe("");
-    expect(imgStar[1].alt).not.toBe("");
+    const img = screen.getByRole('img', { name: /sprite/i });
+    expect(img.src).toBe('https://cdn2.bulbagarden.net/upload/b/b2/Spr_5b_025_m.png');
   });
 });
